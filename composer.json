@@ -1,0 +1,45 @@
+{
+    "name": "evista/clean_code",
+    "description": "Demonstration of clean code practices in PHP. ",
+    "keywords": [
+        "evista",
+        "clean_code",
+        "refactoring",
+        "demonstration"
+    ],
+    "homepage": "https://github.com/evista/clean_code",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Balint Sera",
+            "email": "sera.balint@e-vista.hu",
+            "homepage": "http://evista-agency.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=5.5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*",
+        "scrutinizer/ocular": "~1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Evista\\CleanCode\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Evista\\CleanCode\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
