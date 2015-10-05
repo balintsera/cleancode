@@ -11,23 +11,14 @@ namespace Evista\CleanCode;
 
 class LongMethods
 {
-    public function getLogName($day){
+    public function getLogName($d, $type){
 
         // Validate some parameters: a date
-        if(!isset($day)){
+        if(!isset($d)){
             return false;
         }
         $datePattern = '/^20[0-9]{2}-[0,1][0-9]-[0-3][0-9]$/';
-        if(preg_match($datePattern, $day)){
-            $filename = $day.'-'.'somelog.log';
-            // Create a file if not exists with that date
-            if(!file_exists(__DIR__.'/../log/'.$filename)) {
-                touch(__DIR__.'/../log/'.$filename);
-                // create file
-            }
-
-            $logfile = fopen(__DIR__.'/../log/'.$filename, "a");
-
+        if(preg_match($datePattern, $d)){
 
             // Get some content found in a csv file
             $row = 1;
@@ -42,13 +33,41 @@ class LongMethods
                 fclose($handle);
             }
 
-            // Write a new formatted log entry to the file - eg. get from an other csv file (yesterday)
-            $entry = $day.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
+            // Write a new formatted log e to the file - eg. get from an other csv file (yesterday)
+            $e = $d.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
 
-            fputs($logfile, $entry);
-            fclose($logfile);
-            // Return the new file name?
-            return $logfile;
+
+            switch($type){
+                case 'file':
+                    $filename = $d.'-'.'somelog.log';
+                    // Create a file if not exists with that date
+                    if(!file_exists(__DIR__.'/../log/'.$filename)) {
+                        touch(__DIR__.'/../log/'.$filename);
+                        // create file
+                    }
+
+                    $lf = fopen(__DIR__.'/../log/'.$filename, "a");
+                    fputs($lf, $e);
+                    fclose($lf);
+                    break;
+                case 'mail':
+                    $to = 'sera.balint@e-vista.hu';
+                    $subject = 'LogMail ' + $d;
+                    $body = $e;
+
+                    mail($to, $subject, $body);
+
+                    break;
+                case 'db':
+                    //...
+                    break;
+                default:
+                    break;
+            }
+
+
+            // Return the new file name
+            return true;
         }
 
     }
