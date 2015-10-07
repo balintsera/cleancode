@@ -34,8 +34,8 @@ class LongMethods
             fclose($handle);
         }
 
-        // Write a new formatted log e to the file - eg. get from an other csv file (yesterday)
-        $e = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
+        // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
+        $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
 
 
         switch($type){
@@ -47,14 +47,14 @@ class LongMethods
                     // create file
                 }
 
-                $lf = fopen(__DIR__.'/../log/'.$filename, "a");
-                fputs($lf, $e);
-                fclose($lf);
+                $logFile = fopen(__DIR__.'/../log/'.$filename, "a");
+                fputs($logFile, $entity);
+                fclose($logFile);
                 break;
             case 'mail':
-                $to = 'sera.balint@e-vista.hu';
+                $to = 'sera.balint@entity-vista.hu';
                 $subject = 'LogMail ' + $dayDate;
-                $body = $e;
+                $body = $entity;
 
                 mail($to, $subject, $body);
 
