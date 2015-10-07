@@ -22,6 +22,7 @@ class LongMethods
         }
 
         // Get some content found in a csv file
+        $found =
         $row = 1;
 
         if (($handle = fopen(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv', "r")) !== FALSE) {
@@ -69,7 +70,10 @@ class LongMethods
 
         // Return the new file name
         return true;
+    }
 
+
+    private function getNameAndUrlFromCSVFile(){
 
     }
 }
