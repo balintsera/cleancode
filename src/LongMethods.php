@@ -13,12 +13,12 @@ use Evista\CleanCode\Exception\NotADayDateException;
 
 class LongMethods
 {
-    public function getLogName($d, $type){
+    public function getLogName($dayDate, $type){
 
-        // Validate $d 
+        // Validate $d
         $datePattern = '/^20[0-9]{2}-[0,1][0-9]-[0-3][0-9]$/';
-        if(! preg_match($datePattern, $d)){
-            throw new NotADayDateException('$d should be a day date in the format of: "Y-m-d" but instead of it you gave: '.$d);
+        if(! preg_match($datePattern, $dayDate)){
+            throw new NotADayDateException('$d should be a day date in the format of: "Y-m-d" but instead of it you gave: '.$dayDate);
         }
 
         // Get some content found in a csv file
@@ -35,12 +35,12 @@ class LongMethods
         }
 
         // Write a new formatted log e to the file - eg. get from an other csv file (yesterday)
-        $e = $d.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
+        $e = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
 
 
         switch($type){
             case 'file':
-                $filename = $d.'-'.'somelog.log';
+                $filename = $dayDate.'-'.'somelog.log';
                 // Create a file if not exists with that date
                 if(!file_exists(__DIR__.'/../log/'.$filename)) {
                     touch(__DIR__.'/../log/'.$filename);
@@ -53,7 +53,7 @@ class LongMethods
                 break;
             case 'mail':
                 $to = 'sera.balint@e-vista.hu';
-                $subject = 'LogMail ' + $d;
+                $subject = 'LogMail ' + $dayDate;
                 $body = $e;
 
                 mail($to, $subject, $body);
