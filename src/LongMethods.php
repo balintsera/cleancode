@@ -9,14 +9,12 @@
 namespace Evista\CleanCode;
 
 
+use Evista\CleanCode\Exception\NotADayDateException;
+
 class LongMethods
 {
     public function getLogName($d, $type){
-
-        // Validate some parameters: a date
-        if(!isset($d)){
-            return false;
-        }
+        
         $datePattern = '/^20[0-9]{2}-[0,1][0-9]-[0-3][0-9]$/';
         if(preg_match($datePattern, $d)){
 
@@ -68,6 +66,10 @@ class LongMethods
 
             // Return the new file name
             return true;
+        }
+
+        else{
+            throw new NotADayDateException('$d should be a day date in the format of: "Y-m-d" but instead of it you gave: '.$d);
         }
 
     }

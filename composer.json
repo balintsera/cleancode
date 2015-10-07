@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Evista\\CleanCode\\": "src"
+            "Evista\\CleanCode\\": "src/"
         }
     },
     "autoload-dev": {
