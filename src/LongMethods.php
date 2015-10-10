@@ -9,6 +9,7 @@
 namespace Evista\CleanCode;
 
 
+use Evista\CleanCode\Exception\FileNotFoundException;
 use Evista\CleanCode\Exception\NotADayDateException;
 
 class LongMethods
@@ -22,7 +23,7 @@ class LongMethods
         }
 
         // Get some content found in a csv file
-        $found = $this->getFromCSVFile(1, '34');
+        $found = $this->getFromCSVFile(1, '34', __DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv');
 
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
         $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
@@ -64,26 +65,42 @@ class LongMethods
     /**
      * @param $key
      * @param $value
-     * @return array
+     * @param $filePath
+     * @return array Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
      *
      * Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
      * SRP - single responsibility principle
      * In this case: to get the datas from the file, read the file
-     *
+     * @throws \Exception
      */
-    private function getFromCSVFile($key, $value){
-            $handle = $this->openCSVFile(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv');
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                if($data[$key] == $value){
-                    $found = $data;
-                }
+    private function getFromCSVFile($key, $value, $filePath){
+        try{
+            $handle = $this->openCSVFile($filePath);
+        }
+
+        catch(FileNotFoundException $exception){
+            // can we go forward without a file? Return some default data
+            return ["'Unknown Guy'", '0', 'unknown url'];
+        }
+
+        catch(\Exception $exception){
+            // unknown: just die? why catch it? just for demonstration purposes
+            throw $exception;
+        }
+
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if($data[$key] == $value){
+                $found = $data;
             }
-            fclose($handle);
+        }
+        fclose($handle);
 
         return $found;
     }
 
     private function openCSVFile($filePath){
+        if(!file_exists($filePath))
+            throw new FileNotFoundException('File not found', null, $filePath);
         if (($handle = fopen($filePath, "r")) !== FALSE)
             return $handle;
         else
