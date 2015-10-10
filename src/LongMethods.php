@@ -11,17 +11,14 @@ namespace Evista\CleanCode;
 
 use Evista\CleanCode\Exception\FileNotFoundException;
 use Evista\CleanCode\Exception\NotADayDateException;
+use Evista\CleanCode\Value\LogParam;
 
 class LongMethods
 {
-    private $csvFilePath; //was: __DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv'
-    private $needle; // was: '34'
-    private $columnKey; // was: 1
-
-    public function __construct($columnKey, $needle, $csvFilePath){
-        $this->csvFilePath = $csvFilePath;
-        $this->needle = $needle;
-        $this->columnKey = $columnKey;
+    private $logParams;
+    
+    public function __construct(LogParam $logParams){
+        $this->logParams = $logParams;
     }
 
     public function getLogName($dayDate, $type){
@@ -99,7 +96,7 @@ class LongMethods
         }
         $found = null;
         while (($csvRow = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if($csvRow[$this->columnKey] == $this->needle){
+            if($csvRow[$this->logParams->columnKey] == $this->logParams->needle){
                 $found = $csvRow;
             }
         }
@@ -115,11 +112,11 @@ class LongMethods
      * @internal param $filePath
      */
     private function openCSVFile(){
-        if(!file_exists($this->csvFilePath))
-            throw new FileNotFoundException('File not found', null, $this->csvFilePath);
-        if (($handle = fopen($this->csvFilePath, "r")) !== FALSE)
+        if(!file_exists($this->logParams->csvFilePath))
+            throw new FileNotFoundException('File not found', null, $this->logParams->csvFilePath);
+        if (($handle = fopen($this->logParams->csvFilePath, "r")) !== FALSE)
             return $handle;
         else
-            throw new FileNotFoundException('File not found', null, $this->csvFilePath);
+            throw new FileNotFoundException('File not found', null, $this->logParams->csvFilePath);
     }
 }

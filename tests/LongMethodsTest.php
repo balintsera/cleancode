@@ -3,6 +3,7 @@
 namespace League\Skeleton\Test;
 
 use Evista\CleanCode\LongMethods;
+use Evista\CleanCode\Value\LogParam;
 
 class LongMethodTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +15,8 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFromCSVFile()
     {
-        $longMethods = new LongMethods(1, '34', __DIR__.self::CSV_FILE_PATH);
+        $logParam = new LogParam(1, '34', __DIR__.self::CSV_FILE_PATH);
+        $longMethods = new LongMethods($logParam);
         $reflection = new \ReflectionClass(get_class($longMethods));
         $method = $reflection->getMethod('getFromCSVFile');
         $method->setAccessible(true);
@@ -30,7 +32,8 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testOpenCSV(){
-        $longMethods = new LongMethods(1, '34', __DIR__.self::CSV_FILE_PATH);
+        $logParam = new LogParam(1, '34', __DIR__.self::CSV_FILE_PATH);
+        $longMethods = new LongMethods($logParam);
         $reflection = new \ReflectionClass(get_class($longMethods));
         $method = $reflection->getMethod('openCSVFile');
         $method->setAccessible(true);
@@ -40,7 +43,8 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testOpenCSVMissingFile(){
-        $longMethods = new LongMethods(1, '34', self::CSV_FILE_PATH.'.notexists');
+        $logParam = new LogParam(1, '34', self::CSV_FILE_PATH.'.notexists');
+        $longMethods = new LongMethods($logParam);
         $reflection = new \ReflectionClass(get_class($longMethods));
         $method = $reflection->getMethod('getFromCSVFile');
         $method->setAccessible(true);
