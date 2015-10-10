@@ -22,7 +22,7 @@ class LongMethods
         }
 
         // Get some content found in a csv file
-        $found =
+        $found = $this->getFromCSVFile();
         $row = 1;
 
         if (($handle = fopen(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv', "r")) !== FALSE) {
@@ -35,6 +35,7 @@ class LongMethods
             fclose($handle);
         }
 
+        dump($found);
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
         $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
 
@@ -73,7 +74,12 @@ class LongMethods
     }
 
 
-    private function getNameAndUrlFromCSVFile(){
+    private function getFromCSVFile(){
 
+        return [
+            0 => "'Kovács János'",
+            1 => " 34",
+            2 => " http://index.hu"
+        ];
     }
 }

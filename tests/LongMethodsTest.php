@@ -15,9 +15,17 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
     {
         $longMethods = new LongMethods();
         $reflection = new \ReflectionClass(get_class($longMethods));
-        $method = $reflection->getMethod('getNameAndUrlFromCSVFile');
+        $method = $reflection->getMethod('getFromCSVFile');
         $method->setAccessible(true);
 
-        $this->assertEquals([''], $method->invokeArgs($longMethods, []));
+        $expected = [
+            0 => "'Kovács János'",
+            1 => " 34",
+            2 => " http://index.hu"
+        ];
+
+        $this->assertEquals($expected, $method->invokeArgs($longMethods, []));
     }
+
+
 }
