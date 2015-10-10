@@ -27,5 +27,15 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $method->invokeArgs($longMethods, [1, '34']));
     }
 
+    public function testOpenCSV(){
+        $longMethods = new LongMethods();
+        $reflection = new \ReflectionClass(get_class($longMethods));
+        $method = $reflection->getMethod('openCSVFile');
+        $method->setAccessible(true);
+
+        $this->assertInternalType('resource', $method->invokeArgs($longMethods, [__DIR__.'/../src/datas-Final-2014-12-12-lastEdited.doc.csv']));
+
+
+    }
 
 }

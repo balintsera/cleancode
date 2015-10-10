@@ -24,7 +24,6 @@ class LongMethods
         // Get some content found in a csv file
         $found = $this->getFromCSVFile(1, '34');
 
-        dump($found);
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
         $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
 
@@ -62,16 +61,32 @@ class LongMethods
         return true;
     }
 
-
+    /**
+     * @param $key
+     * @param $value
+     * @return array
+     *
+     * Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
+     * SRP - single responsibility principle
+     * In this case: to get the datas from the file, read the file
+     *
+     */
     private function getFromCSVFile($key, $value){
-        if (($handle = fopen(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv', "r")) !== FALSE) {
+            $handle = $this->openCSVFile(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv');
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 if($data[$key] == $value){
                     $found = $data;
                 }
             }
             fclose($handle);
-        }
+
         return $found;
+    }
+
+    private function openCSVFile($filePath){
+        if (($handle = fopen($filePath, "r")) !== FALSE)
+            return $handle;
+        else
+            throw new FileNotFoundException('File not found', null, $filePath);
     }
 }
