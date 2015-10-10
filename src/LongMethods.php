@@ -63,8 +63,8 @@ class LongMethods
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param $columnKey
+     * @param $needle
      * @param $filePath
      * @return array Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
      *
@@ -73,13 +73,13 @@ class LongMethods
      * In this case: to get the datas from the file, read the file
      * @throws \Exception
      */
-    private function getFromCSVFile($key, $value, $filePath){
+    private function getFromCSVFile($columnKey, $needle, $filePath){
         try{
             $handle = $this->openCSVFile($filePath);
         }
 
         catch(FileNotFoundException $exception){
-            // can we go forward without a file? Return some default data
+            // can we go forward without a file? Return some default csvRow
             return ["'Unknown Guy'", '0', 'unknown url'];
         }
 
@@ -87,10 +87,10 @@ class LongMethods
             // unknown: just die? why catch it? just for demonstration purposes
             throw $exception;
         }
-
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if($data[$key] == $value){
-                $found = $data;
+        $found = null;
+        while (($csvRow = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if($csvRow[$columnKey] == $needle){
+                $found = $csvRow;
             }
         }
         fclose($handle);
