@@ -14,6 +14,16 @@ use Evista\CleanCode\Exception\NotADayDateException;
 
 class LongMethods
 {
+    private $csvFilePath; //was: __DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv'
+    private $needle; // was: '34'
+    private $columnKey; // was: 1
+
+    public function __construct($columnKey, $needle, $csvFilePath){
+        $this->csvFilePath = $csvFilePath;
+        $this->needle = $needle;
+        $this->columnKey = $columnKey;
+    }
+
     public function getLogName($dayDate, $type){
 
         // Validate $d
@@ -23,7 +33,7 @@ class LongMethods
         }
 
         // Get some content found in a csv file
-        $found = $this->getFromCSVFile(1, '34', __DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv');
+        $found = $this->getFromCSVFile();
 
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
         $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
@@ -63,19 +73,19 @@ class LongMethods
     }
 
     /**
-     * @param $columnKey
-     * @param $needle
-     * @param $filePath
-     * @return array Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
-     *
+     * @return array
+     **
      * Uncle Bob, levels of (abstr)actions: "to do sg, do sg else'. The second part goes to its dedicated method.
      * SRP - single responsibility principle
      * In this case: to get the datas from the file, read the file
      * @throws \Exception
+     * @internal param $columnKey
+     * @internal param $needle
+     * @internal param $filePath
      */
-    private function getFromCSVFile($columnKey, $needle, $filePath){
+    private function getFromCSVFile(){
         try{
-            $handle = $this->openCSVFile($filePath);
+            $handle = $this->openCSVFile();
         }
 
         catch(FileNotFoundException $exception){
@@ -89,7 +99,7 @@ class LongMethods
         }
         $found = null;
         while (($csvRow = fgetcsv($handle, 1000, ",")) !== FALSE) {
-            if($csvRow[$columnKey] == $needle){
+            if($csvRow[$this->columnKey] == $this->needle){
                 $found = $csvRow;
             }
         }
@@ -100,16 +110,16 @@ class LongMethods
 
     /**
      * Opens a file and returns a file handler
-     * @param $filePath
      * @return resource
      * @throws FileNotFoundException
+     * @internal param $filePath
      */
-    private function openCSVFile($filePath){
-        if(!file_exists($filePath))
-            throw new FileNotFoundException('File not found', null, $filePath);
-        if (($handle = fopen($filePath, "r")) !== FALSE)
+    private function openCSVFile(){
+        if(!file_exists($this->csvFilePath))
+            throw new FileNotFoundException('File not found', null, $this->csvFilePath);
+        if (($handle = fopen($this->csvFilePath, "r")) !== FALSE)
             return $handle;
         else
-            throw new FileNotFoundException('File not found', null, $filePath);
+            throw new FileNotFoundException('File not found', null, $this->csvFilePath);
     }
 }
