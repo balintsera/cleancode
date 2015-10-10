@@ -98,6 +98,12 @@ class LongMethods
         return $found;
     }
 
+    /**
+     * Opens a file and returns a file handler
+     * @param $filePath
+     * @return resource
+     * @throws FileNotFoundException
+     */
     private function openCSVFile($filePath){
         if(!file_exists($filePath))
             throw new FileNotFoundException('File not found', null, $filePath);
