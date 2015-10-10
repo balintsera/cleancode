@@ -24,7 +24,7 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
             2 => " http://index.hu"
         ];
 
-        $this->assertEquals($expected, $method->invokeArgs($longMethods, []));
+        $this->assertEquals($expected, $method->invokeArgs($longMethods, [1, '34']));
     }
 
 
