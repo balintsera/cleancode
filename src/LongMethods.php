@@ -10,6 +10,7 @@ namespace Evista\CleanCode;
 
 
 use Evista\CleanCode\Exception\FileNotFoundException;
+use Evista\CleanCode\Exception\MissingHandleException;
 use Evista\CleanCode\Exception\NotADayDateException;
 use Evista\CleanCode\Value\LogParam;
 
@@ -98,13 +99,30 @@ class LongMethods
             throw $exception;
         }
         $this->found = null;
-        while (($csvRow = fgetcsv($this->csvFileHandle, 1000, ",")) !== FALSE) {
+        foreach($this->yieldRows() as $csvRow){
             if($csvRow[$this->logParams->columnKey] == $this->logParams->needle){
                 $this->found = $csvRow;
+                break;
             }
         }
+
         fclose($this->csvFileHandle);
 
+    }
+
+    /**
+     * Yields one row at a time
+     * @return \Generator
+     * @throws MissingHandleException
+     */
+    private function yieldRows(){
+        if($this->csvFileHandle === false){
+            throw new MissingHandleException('Missing file handle.');
+        }
+        while(feof($this->csvFileHandle) === false){
+            yield fgetcsv($this->csvFileHandle, 1000, ",");
+        }
+        fclose($this->csvFileHandle);
     }
 
     /**
