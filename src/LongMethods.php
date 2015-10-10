@@ -23,17 +23,6 @@ class LongMethods
 
         // Get some content found in a csv file
         $found = $this->getFromCSVFile();
-        $row = 1;
-
-        if (($handle = fopen(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv', "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $row++;
-                if($data[1] == '34'){
-                    $found = $data;
-                }
-            }
-            fclose($handle);
-        }
 
         dump($found);
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
@@ -75,11 +64,17 @@ class LongMethods
 
 
     private function getFromCSVFile(){
+        $row = 1;
 
-        return [
-            0 => "'Kovács János'",
-            1 => " 34",
-            2 => " http://index.hu"
-        ];
+        if (($handle = fopen(__DIR__.'/datas-Final-2014-12-12-lastEdited.doc.csv', "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $row++;
+                if($data[1] == '34'){
+                    $found = $data;
+                }
+            }
+            fclose($handle);
+        }
+        return $found;
     }
 }
