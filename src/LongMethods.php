@@ -16,6 +16,8 @@ use Evista\CleanCode\Value\LogParam;
 class LongMethods
 {
     private $logParams;
+    private $csvFileHandle;
+    private $found;
     
     public function __construct(LogParam $logParams){
         $this->logParams = $logParams;
@@ -30,10 +32,10 @@ class LongMethods
         }
 
         // Get some content found in a csv file
-        $found = $this->getFromCSVFile();
+        $this->getFromCSVFile();
 
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
-        $entity = $dayDate.": ".str_replace("'",'', $found[0])." megnyitotta böngészőjében a(z) ".$found[2]." oldalt\n\n";
+        $entity = $dayDate.": ".str_replace("'",'', $this->found[0])." megnyitotta böngészőjében a(z) ".$this->found[2]." oldalt\n\n";
 
 
         switch($type){
@@ -82,27 +84,27 @@ class LongMethods
      */
     private function getFromCSVFile(){
         try{
-            $handle = $this->openCSVFile();
+            $this->openCSVFile();
         }
 
         catch(FileNotFoundException $exception){
             // can we go forward without a file? Return some default csvRow
-            return ["'Unknown Guy'", '0', 'unknown url'];
+            $this->found = ["'Unknown Guy'", '0', 'unknown url'];
+            return;
         }
 
         catch(\Exception $exception){
             // unknown: just die? why catch it? just for demonstration purposes
             throw $exception;
         }
-        $found = null;
-        while (($csvRow = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        $this->found = null;
+        while (($csvRow = fgetcsv($this->csvFileHandle, 1000, ",")) !== FALSE) {
             if($csvRow[$this->logParams->columnKey] == $this->logParams->needle){
-                $found = $csvRow;
+                $this->found = $csvRow;
             }
         }
-        fclose($handle);
+        fclose($this->csvFileHandle);
 
-        return $found;
     }
 
     /**
@@ -114,9 +116,70 @@ class LongMethods
     private function openCSVFile(){
         if(!file_exists($this->logParams->csvFilePath))
             throw new FileNotFoundException('File not found', null, $this->logParams->csvFilePath);
-        if (($handle = fopen($this->logParams->csvFilePath, "r")) !== FALSE)
-            return $handle;
+        if (($this->csvFileHandle = fopen($this->logParams->csvFilePath, "r")) !== FALSE)
+            return $this->csvFileHandle;
         else
             throw new FileNotFoundException('File not found', null, $this->logParams->csvFilePath);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogParams()
+    {
+        return $this->logParams;
+    }
+
+    /**
+     * @param mixed $logParams
+     * @return LongMethods
+     */
+    public function setLogParams($logParams)
+    {
+        $this->logParams = $logParams;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCsvFileHandle()
+    {
+        return $this->csvFileHandle;
+    }
+
+    /**
+     * @param mixed $csvFileHandle
+     * @return LongMethods
+     */
+    public function setCsvFileHandle($csvFileHandle)
+    {
+        $this->csvFileHandle = $csvFileHandle;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFound()
+    {
+        return $this->found;
+    }
+
+    /**
+     * @param mixed $found
+     * @return LongMethods
+     */
+    public function setFound($found)
+    {
+        $this->found = $found;
+
+        return $this;
+    }
+
+
+    
+    
 }

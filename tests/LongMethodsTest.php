@@ -27,7 +27,9 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
             2 => " http://index.hu"
         ];
 
-        $this->assertEquals($expected, $method->invokeArgs($longMethods, []));
+        $method->invokeArgs($longMethods, []);
+
+        $this->assertEquals($expected, $longMethods->getFound());
 
     }
 
@@ -55,7 +57,9 @@ class LongMethodTest extends \PHPUnit_Framework_TestCase
             2 => "unknown url"
         ];
 
-        $this->assertEquals($expected, $method->invokeArgs($longMethods, []));
+        $method->invokeArgs($longMethods, []);
+
+        $this->assertEquals($expected, $longMethods->getFound());
     }
 
 }
