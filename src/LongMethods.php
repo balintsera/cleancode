@@ -38,35 +38,8 @@ class LongMethods
         // Write a new formatted log entity to the file - eg. get from an other csv file (yesterday)
         $entity = $dayDate.": ".str_replace("'",'', $this->found[0])." megnyitotta böngészőjében a(z) ".$this->found[2]." oldalt\n\n";
 
-
-
-        switch($type){
-            case 'file':
-                $filename = $dayDate.'-'.'somelog.log';
-                // Create a file if not exists with that date
-                if(!file_exists(__DIR__.'/../log/'.$filename)) {
-                    touch(__DIR__.'/../log/'.$filename);
-                    // create file
-                }
-
-                $logFile = fopen(__DIR__.'/../log/'.$filename, "a");
-                fputs($logFile, $entity);
-                fclose($logFile);
-                break;
-            case 'mail':
-                $to = 'sera.balint@entity-vista.hu';
-                $subject = 'LogMail ' + $dayDate;
-                $body = $entity;
-
-                mail($to, $subject, $body);
-
-                break;
-            case 'db':
-                //...
-                break;
-            default:
-                break;
-        }
+        // Write out to the requested medium
+        $this->writeOut($type, $entity, $dayDate);
 
 
         // Return the new file name
@@ -139,6 +112,42 @@ class LongMethods
             return $this->csvFileHandle;
         else
             throw new FileNotFoundException('File not found', null, $this->logParams->csvFilePath);
+    }
+
+    /**
+     * Write out
+     * @param $type
+     * @param $entity
+     * @param $dayDate
+     */
+    private function writeOut($type, $entity, $dayDate){
+        switch($type){
+            case 'file':
+                $filename = $dayDate.'-'.'somelog.log';
+                // Create a file if not exists with that date
+                if(!file_exists(__DIR__.'/../log/'.$filename)) {
+                    touch(__DIR__.'/../log/'.$filename);
+                    // create file
+                }
+
+                $logFile = fopen(__DIR__.'/../log/'.$filename, "a");
+                fputs($logFile, $entity);
+                fclose($logFile);
+                break;
+            case 'mail':
+                $to = 'sera.balint@entity-vista.hu';
+                $subject = 'LogMail ' + $dayDate;
+                $body = $entity;
+
+                mail($to, $subject, $body);
+
+                break;
+            case 'db':
+                //...
+                break;
+            default:
+                break;
+        }
     }
 
     /**

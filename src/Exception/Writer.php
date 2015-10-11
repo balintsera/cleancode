@@ -11,10 +11,12 @@ namespace Evista\CleanCode\Exception;
 
 interface Writer
 {
+
+    public function __construct($message);
+
     /**
      * Write message out
-     * @param $message
      * @return mixed
      */
-    public function writeOut($message);
+    public function writeOut();
 }
