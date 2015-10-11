@@ -6,14 +6,24 @@
  * Time: 12:18
  */
 
-namespace Evista\CleanCode\Exception;
+namespace Evista\CleanCode;
 
 
 interface Writer
 {
+    /**
+     * Set message
+     * @param $message
+     * @return mixed
+     */
+    public function setMessage($message);
 
-    public function __construct($message);
-
+    /**
+     * Set dayDate
+     * @param $dayDate
+     * @return mixed
+     */
+    public function setDayDate($dayDate);
     /**
      * Write message out
      * @return mixed

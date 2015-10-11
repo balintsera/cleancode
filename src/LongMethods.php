@@ -119,39 +119,14 @@ class LongMethods
      * @param $type
      * @param $entity
      * @param $dayDate
-     * @param null $logDir
+     * @throws Exception\WrongLogFactoryTypeException
+     * @internal param null $logDir
      */
-    private function writeOut($type, $entity, $dayDate, $logDir = null){
-        if(!isset($logDir)){
-            $logDir = __DIR__.'/../log/';
-        }
-        switch($type){
-            case 'file':
-                $filename = $dayDate.'-'.'somelog.log';
-                // Create a file if not exists with that date
-                if(!file_exists($logDir.$filename)) {
-                    touch($logDir.$filename);
-                    // create file
-                }
+    private function writeOut($type, $entity, $dayDate){
+        $logWriter = LogFactory::create($type);
+        $logWriter->setMessage($entity);
+        $logWriter->setDayDate($dayDate);
 
-                $logFile = fopen($logDir.$filename, "a");
-                fputs($logFile, $entity);
-                fclose($logFile);
-                break;
-            case 'mail':
-                $to = 'sera.balint@entity-vista.hu';
-                $subject = 'LogMail ' + $dayDate;
-                $body = $entity;
-
-                mail($to, $subject, $body);
-
-                break;
-            case 'db':
-                //...
-                break;
-            default:
-                break;
-        }
     }
 
     /**
