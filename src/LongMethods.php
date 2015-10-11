@@ -39,6 +39,7 @@ class LongMethods
         $entity = $dayDate.": ".str_replace("'",'', $this->found[0])." megnyitotta böngészőjében a(z) ".$this->found[2]." oldalt\n\n";
 
 
+
         switch($type){
             case 'file':
                 $filename = $dayDate.'-'.'somelog.log';
