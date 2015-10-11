@@ -15,12 +15,12 @@ trait PrivateMethod
     private $methodResult;
     private $ownerObject;
 
-    public function callMethodWithParams($method, $logParam){
+    public function callMethodWithParams($method, $logParam, $methodParams = []){
         $this->ownerObject = new LongMethods($logParam);
         $reflection = new \ReflectionClass(get_class($this->ownerObject));
         $method = $reflection->getMethod($method);
         $method->setAccessible(true);
-        $this->methodResult = $method->invokeArgs($this->ownerObject, []);
+        $this->methodResult = $method->invokeArgs($this->ownerObject, $methodParams);
 
     }
 

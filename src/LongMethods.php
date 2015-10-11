@@ -119,18 +119,22 @@ class LongMethods
      * @param $type
      * @param $entity
      * @param $dayDate
+     * @param null $logDir
      */
-    private function writeOut($type, $entity, $dayDate){
+    private function writeOut($type, $entity, $dayDate, $logDir = null){
+        if(!isset($logDir)){
+            $logDir = __DIR__.'/../log/';
+        }
         switch($type){
             case 'file':
                 $filename = $dayDate.'-'.'somelog.log';
                 // Create a file if not exists with that date
-                if(!file_exists(__DIR__.'/../log/'.$filename)) {
-                    touch(__DIR__.'/../log/'.$filename);
+                if(!file_exists($logDir.$filename)) {
+                    touch($logDir.$filename);
                     // create file
                 }
 
-                $logFile = fopen(__DIR__.'/../log/'.$filename, "a");
+                $logFile = fopen($logDir.$filename, "a");
                 fputs($logFile, $entity);
                 fclose($logFile);
                 break;
