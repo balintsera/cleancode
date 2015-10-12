@@ -126,7 +126,7 @@ class LongMethods
         $logWriter = LogFactory::create($type);
         $logWriter->setMessage($entity);
         $logWriter->setDayDate($dayDate);
-
+        $logWriter->writeOut();
     }
 
     /**
